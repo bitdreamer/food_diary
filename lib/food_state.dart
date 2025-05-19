@@ -1,9 +1,10 @@
 // food_state.dart
 // Barrett Koster 2025
-// 
+// We are working to get more depth in the Hydrate function.  
+// So far it stores a flat string:string map.  
 
 import 'dart:convert';
-import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'munch.dart';
@@ -15,7 +16,6 @@ class FoodState
   FoodState(this.munchies); // constructor
 
   // turns the object into a map
-  // I think this does not work.  It's too hard.
   Map<String,dynamic> toMap()
   { 
     Map<String,dynamic> theMap = {};
