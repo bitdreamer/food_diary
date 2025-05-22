@@ -28,8 +28,9 @@ class Daily extends StatelessWidget
   }
 }
 
+// This is the data entry page.
 class Daily2 extends StatelessWidget 
-{ final String title = "Daily - [date]";
+{ final String title = "Daily - ${DateTime.now().toString().split(" ")[0]}";
   Daily2( {super.key} );
 
   @override
@@ -45,14 +46,7 @@ class Daily2 extends StatelessWidget
       body: Column
       ( children: 
         [ dayLog(context), // today so far
-          SizedBox
-          ( height:50, width:300,
-            child: TextField(controller: tec ),
-          ),
-          ElevatedButton
-          ( onPressed: (){ fc.addFood(tec.text); },
-            child: Text("submit"),
-          ),
+          EntryRow(),
           // ResetButton(),
         ],
       ),
@@ -71,6 +65,36 @@ class Daily2 extends StatelessWidget
     ( height:300, width:400,
       decoration: BoxDecoration( border:Border.all(width:1)),
       child: Wrap ( children: kids, ),
+    );
+  }
+}
+
+class EntryRow extends StatelessWidget
+{ 
+  final TextEditingController tec;
+
+  EntryRow( ) : tec = TextEditingController();
+
+  Widget build( BuildContext context )
+  { 
+    FoodCubit fc = BlocProvider.of<FoodCubit>(context);
+    // FoodState fs = fc.state;
+    String cat = "ate"; // ate, did,felt,hap  
+    String dt = DateTime.now().toString();
+
+    return Row
+    ( children:
+      [ Text("ate"), // to do: menu of ate, did, felt, hap 'cat'egory
+        SizedBox
+        ( height:40, width:200,
+          child: TextField(controller: tec ),
+        ),
+        Text("now"), // to do: make a menu of previous hours
+        ElevatedButton
+        ( onPressed: (){ fc.addFood(tec.text,cat,dt); }, // to do: add cat, date
+          child: Text("add"),
+        ),
+      ],
     );
   }
 }

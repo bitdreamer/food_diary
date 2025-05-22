@@ -20,7 +20,10 @@ class Munch
   // : when = DateTime.parse(whenString);
 
   String show()
-  { return "$when $what ";}
+  { List<String> t = when.split(" ")[1].split(":"); // time as a list h,m,s
+    String hm = "${t[0]}"; // just show the hour
+    return "$hm $what ";
+  }
 
   // returns a Map containing the information of this object
   Map<String,dynamic> toMap()

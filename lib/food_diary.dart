@@ -69,6 +69,7 @@ class Splash extends StatelessWidget
           [ Text("by Barrett Koster 2025"),
             foodsButton(context),
             analysisButton(context),
+            ResetButton(),
           ],
         ),
       ),

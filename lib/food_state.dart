@@ -10,7 +10,7 @@ import 'munch.dart';
 class FoodState
 { 
   List<Munch> munchies; // time stamped eating or feeling or ...
-
+  // Map<String,About> menu; // details about each food or feeling ...
   FoodState(this.munchies);
 
   // toMap()
@@ -57,14 +57,14 @@ class FoodState
 
 class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
 {
-  FoodCubit() : super( FoodState([ Munch("apple","99" /*"2025-01-02 10:43:17"*/ ),
-                                   Munch("banana", "99" /*"2025-01-03 8:41:00"*/ ),
+  FoodCubit() : super( FoodState([ Munch("apple", "2025-01-02 10:43:17" ),
+                                   Munch("banana", "2025-01-03 8:41:00" ),
                                  ]) );
 
   void setFood(List<Munch> m ) { emit( FoodState(m) ); }
 
-  void addFood( String f )
-  { Munch m = Munch( f, "97" /* DateTime.now().toString()*/  );
+  void addFood( String f, String cat, String dt )
+  { Munch m = Munch( f, dt  );
     state.munchies.add(m);
     emit( FoodState(state.munchies) );
   }
