@@ -1,6 +1,6 @@
 // food_diary.dart 
 // Barrett Koster
-// working on the core page
+// 
 
 import "dart:io";
 import 'package:flutter/material.dart';
@@ -14,6 +14,11 @@ import 'munch.dart';
 
 
 void main() async
+{ await hydratePrep();
+  runApp(const FoodDiary());
+}
+
+Future<void> hydratePrep() async
 { WidgetsFlutterBinding.ensureInitialized();
   Directory addx = await getApplicationDocumentsDirectory();
   String add = addx.path;
@@ -22,11 +27,10 @@ void main() async
     ( (await getApplicationDocumentsDirectory()).path,),
   );
   print("add=$add");
-  runApp(const FoodDiary());
 }
 
 class FoodDiary extends StatelessWidget
-{ static const String header = "Food Diary 5";
+{ static const String header = "Food Diary 7";
 
   const FoodDiary({super.key});
 
@@ -58,7 +62,7 @@ class Core extends StatelessWidget
     FoodState fs = fc.state;
     TextEditingController tec = TextEditingController();
 
-    // print("json=${fs.toJson()}"); fail, it's too hard
+    print("json=${fs.toJson()}"); // debugging
 
     return Scaffold
     ( appBar: AppBar(  title: Text(title),),
@@ -90,7 +94,8 @@ class Core extends StatelessWidget
 
     List<Widget> kids = [];
     for ( Munch m in theList )
-    { String t = DateTime.parse(m.when).hour.toString();
+    { // String t = DateTime.parse(m.when).hour.toString();
+      String t = m.when;
       String label = "$t ${m.what}";
       kids.add
       ( ElevatedButton
