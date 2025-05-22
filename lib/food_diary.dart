@@ -10,7 +10,8 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'food_state.dart';
-import 'munch.dart';
+// import 'munch.dart';
+import 'daily.dart';
 
 
 void main() async
@@ -30,7 +31,7 @@ Future<void> hydratePrep() async
 }
 
 class FoodDiary extends StatelessWidget
-{ static const String header = "Food Diary 7";
+{ static const String header = "Food Diary";
 
   const FoodDiary({super.key});
 
@@ -43,7 +44,8 @@ class FoodDiary extends StatelessWidget
         child: BlocBuilder<FoodCubit,FoodState>
         ( builder: (context,state)
           { // FDCubit fdc =  BlocProvider.of<FDCubit>(context);
-            return  Core(title: header, /* fdc:fdc */ );
+            // return  Core(title: header, /* fdc:fdc */ );
+            return Splash( header );
           },
         ),
       ),
@@ -51,69 +53,47 @@ class FoodDiary extends StatelessWidget
   }
 }
 
-class Core extends StatelessWidget 
+class Splash extends StatelessWidget
 { final String title;
-  // final FDCubit fdc;
-  const Core({super.key, required this.title } );
-
-  @override
-  Widget build(BuildContext context) 
+  Splash( this.title );
+ 
+  Widget build( BuildContext context )
   { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
     FoodState fs = fc.state;
-    TextEditingController tec = TextEditingController();
-
-    print("json=${fs.toJson()}"); // debugging
 
     return Scaffold
-    ( appBar: AppBar(  title: Text(title),),
-      body: Column
-      ( children: 
-        [ Container
-          ( height:300, width:400,
-            decoration: BoxDecoration( border:Border.all(width:1)),
-            child: makeListView(context),
-          ),
-          SizedBox
-          ( height:50, width:300,
-            child: TextField(controller: tec ),
-          ),
-          ElevatedButton
-          ( onPressed: (){ fc.addFood(tec.text); },
-            child: Text("submit"),
-          ),
-          ResetButton(),
-        ],
+    ( appBar: AppBar( title: Text(title), ),
+      body: Center
+      ( child: Column
+        ( children:
+          [ Text("by Barrett Koster 2025"),
+            foodsButton(context),
+            analysisButton(context),
+          ],
+        ),
       ),
     );
-  }     
+  }
 
-  Widget makeListView( BuildContext context )
-  { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
-    FoodState fs = fc.state;
-    List<Munch> theList = fs.munchies;
-
-    List<Widget> kids = [];
-    for ( Munch m in theList )
-    { // String t = DateTime.parse(m.when).hour.toString();
-      String t = m.when;
-      String label = "$t ${m.what}";
-      kids.add
-      ( ElevatedButton
-        ( onPressed: (){},
-          child:  Text( label ),
-        )
-      );
-    }
-
-    Wrap wr = Wrap
-    ( children:kids,
+  // foodsButton() is a button that sends you to
+  // the page with the list of foods for today.
+  Widget foodsButton( BuildContext context )
+  { return ElevatedButton
+    ( onPressed: ()
+      { Navigator.of(context).push
+        ( MaterialPageRoute
+          ( builder: (context2)=> Daily(context),
+          ) 
+        );
+      },
+      child: Text("zappnin"),
     );
-    ListView lv = ListView
-    ( scrollDirection: Axis.vertical,
-      // itemExtent: 30,
-      children: [wr],
+  }
+  Widget analysisButton( BuildContext context )
+  { return ElevatedButton
+    ( onPressed: (){},
+      child: Text("analyze"),
     );
-    return lv;
   }
 }
 

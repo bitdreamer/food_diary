@@ -97,3 +97,31 @@ class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
 
 }
 
+/*
+At one level, there's really only two kinds of things to
+record, stuff that a person has control over doing, and
+stuff that just happens.  It might be interesting if you
+always eat banana with peanut butter, but there's not
+cause and effect if both are choices.  The same goes for
+two feelings -- you might get headaches and dizziness 
+together all of the time, but ... that does not tell us
+what to do about either, no cause and effect.  So ... 
+we really need to keep causes and effects in two categories.
+But.
+We could have more.  Do you want scratching your ear or
+exercising in the same list as foods?  Keeping these 
+separate will make sense for the User Interface.
+So, question.
+Do we store all things in one list, and attach a category
+to each record saying food or feeling (or action or ...).
+Or do we create separate lists?  Programming is more efficient
+if there is just one list.  That way we only need one 
+edit page.  Whether it is 'banana' or 'scratch', you have
+the word, a number (and maybe do not list the units here?).
+And there's is a food/feeling/action/.. menu.  Oh, and the 
+date, that is same for all.  We can display only type X at
+a time (and provide those buttons on the row in the middle
+of the entry screen, between what you have and what you add).
+So far that row has 3 things on it, buttons, not a menu.  Good,
+the IF will be fast.
+*/
