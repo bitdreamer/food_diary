@@ -9,7 +9,7 @@ import 'munch.dart';
 
 class FoodState
 { 
-  List<Munch> munchies;
+  List<Munch> munchies; // time stamped eating or feeling or ...
 
   FoodState(this.munchies);
 

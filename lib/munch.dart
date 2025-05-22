@@ -1,15 +1,15 @@
 // munch.dart
 // Barrett Koster 2025
-// This is for ONE item, something you ate
-// and when you ate it, presumably.
+// This is for ONE item, something you ate or did or felt,
+// and when that happened.
 
 // import "package:flutter/material.dart";
 
-import 'dart:convert';
+// import 'dart:convert';
 
 class Munch 
 {
-  String what; // name of the food
+  String what; // name of the food or feeling or action
   String when; // date+time stored as string to not hang on format,
                // for now
   // int when;
@@ -18,6 +18,9 @@ class Munch
   Munch( this.what, this.when );
   // Munch( this.what, String whenString )
   // : when = DateTime.parse(whenString);
+
+  String show()
+  { return "$when $what ";}
 
   // returns a Map containing the information of this object
   Map<String,dynamic> toMap()
