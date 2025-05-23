@@ -88,7 +88,7 @@ class ItemChoices extends StatelessWidget
       {  kids.add
         ( //Text(me.key) 
           ElevatedButton
-          ( onPressed: (){},
+          ( onPressed: (){ fc.addFood(me.key,cat,DateTime.now().toString()); },
             child: Text(me.key),
           )
         );
