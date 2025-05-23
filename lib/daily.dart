@@ -6,11 +6,12 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 import "food_state.dart";
+import "show_state.dart";
 import "munch.dart";
 import "about.dart";
 
 // the Daily layer sets up the Bloc stuff with the FoodCubit
-// from the top.  
+// alreayd open from the top of the program.  
 class Daily extends StatelessWidget
 {
   final BuildContext bc;
@@ -83,7 +84,16 @@ class ItemChoices extends StatelessWidget
 
     List<Widget> kids = [];
     for ( MapEntry<String,About> me in abouts.entries )
-    { kids.add( Text(me.key) ); }
+    { if ( me.value.cat==cat)
+      {  kids.add
+        ( //Text(me.key) 
+          ElevatedButton
+          ( onPressed: (){},
+            child: Text(me.key),
+          )
+        );
+      }
+    }
 
     return Wrap( children: kids );
   }

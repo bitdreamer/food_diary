@@ -11,6 +11,9 @@ import 'about.dart';
 class FoodState
 { 
   List<Munch> munchies; // time stamped eating or feeling or ...
+  // All time-stamped things are in the same list, and we filter
+  // by cat and date.
+
   Map<String,About> abouts; // details about each food or feeling ...
 
   FoodState(this.munchies, this.abouts);
@@ -56,16 +59,11 @@ class FoodState
     return FoodState(munchies,abouts);
   }
   
-  
+  // These apparently need to be defined, but I do not know
+  // that we call them.
   // turns the object into JSON.  Does this by 
   // call toMap and then encode() ing the map.
-  // Note the 'toEncodable' method.  If an item in the encoding is
-  // not a standard one, it calls this function.
-  // Our map is presently made of all standard things, so this
-  // is not used that I know of.
   String toJson() => jsonEncode( toMap() );
-
-  // I am not sure this EVER worked. I do not know that it is called.
   // turns Json back into an object.  
   factory FoodState.fromJson( String source) 
     => FoodState.fromMap(json.decode(source));
@@ -74,14 +72,7 @@ class FoodState
 
 class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
 {
-  FoodCubit() : super( FoodState([ Munch("apple", "2025-01-02 10:43:17" ),
-                                   Munch("banana", "2025-01-03 8:41:00" ),
-                                 ],
-                                 { "banana":About("ate",100,"g"),
-                                   "apple":About("ate",200,"g"),
-                                 }
-                                ) 
-                     );
+  FoodCubit() : super( initFS() );
 
   void setFood(List<Munch> m ) { emit( FoodState(m,state.abouts) ); }
 
@@ -93,7 +84,7 @@ class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
     emit( FoodState(state.munchies,state.abouts) );
   }
 
-  void reset() { emit( FoodState([],{}) ); }
+  void reset() { emit( initFS() ); }
   
   // fromJson()
   // converts the map form of FoodState into a FoodState object.
@@ -118,34 +109,40 @@ class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
   }
   */
   
+  // 
+  static FoodState initFS()
+  {
+    return FoodState
+    ( [],
+      { "banana":About("ate",100,"g"),
+        "apple" :About("ate",200,"g"),
+        "peach" :About("ate",150,"g"),
+        "apple" :About("ate",200,"g"),
+        "potato" :About("ate",300,"g"),
+        "orange" :About("ate",150,"g"),
+        "egg"   :About("ate",100,"g"),
+        "oatmeal" :About("ate",300,"g"),
+        "peanuts" :About("ate",50,"g"),
+        "almonds" :About("ate",50,"g"),
+        "raisins" :About("ate",50,"g"),
+        "walnuts" :About("ate",50,"g"),
+        "yogurt" :About("ate",200,"g"),
+
+        "steps" :About("did",7000,"count"),
+        "pullups" :About("did",3,"count"),
+        "pushups" :About("did",20,"count"),
+        "ran" :About("did",20,"minutes"),
+        "sleep":About("did",8,"hours"),
+
+        "glucose" :About("exp",110,"dk"),
+        "headache" :About("exp",4,"0-10"),
+        "temp" : About("exp",37,"C"),
+        "fart" :About("exp",1,"1-3"),
+        "poop" :About("exp",2,"1-3"),
+        "pee" :About("exp",20,"seconds"),
+      }
+    ); 
+  }
 
 }
 
-/*
-At one level, there's really only two kinds of things to
-record, stuff that a person has control over doing, and
-stuff that just happens.  It might be interesting if you
-always eat banana with peanut butter, but there's not
-cause and effect if both are choices.  The same goes for
-two feelings -- you might get headaches and dizziness 
-together all of the time, but ... that does not tell us
-what to do about either, no cause and effect.  So ... 
-we really need to keep causes and effects in two categories.
-But.
-We could have more.  Do you want scratching your ear or
-exercising in the same list as foods?  Keeping these 
-separate will make sense for the User Interface.
-So, question.
-Do we store all things in one list, and attach a category
-to each record saying food or feeling (or action or ...).
-Or do we create separate lists?  Programming is more efficient
-if there is just one list.  That way we only need one 
-edit page.  Whether it is 'banana' or 'scratch', you have
-the word, a number (and maybe do not list the units here?).
-And there's is a food/feeling/action/.. menu.  Oh, and the 
-date, that is same for all.  We can display only type X at
-a time (and provide those buttons on the row in the middle
-of the entry screen, between what you have and what you add).
-So far that row has 3 things on it, buttons, not a menu.  Good,
-the IF will be fast.
-*/
