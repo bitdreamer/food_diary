@@ -6,12 +6,14 @@
 import 'dart:convert';import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'munch.dart';
+import 'about.dart';
 
 class FoodState
 { 
   List<Munch> munchies; // time stamped eating or feeling or ...
-  // Map<String,About> menu; // details about each food or feeling ...
-  FoodState(this.munchies);
+  Map<String,About> abouts; // details about each food or feeling ...
+
+  FoodState(this.munchies, this.abouts);
 
   // toMap()
   // turns the object into a map.
@@ -24,6 +26,14 @@ class FoodState
     { theList.add( m.toMap() ); // encode map version of the Munch
     } 
     theMap["munchies"] = theList;
+
+    Map<String,dynamic> aboutsMap = {};
+    abouts.forEach
+    ( (key,value)
+      { aboutsMap[key] = value.toMap();
+      }
+    );
+    theMap['abouts'] = aboutsMap;
     return theMap;
   }
 
@@ -36,7 +46,14 @@ class FoodState
     for ( Map<String,dynamic> mmap in mmaps )
     { munchies.add( Munch.fromMap(mmap) ); // back into Munch object
     }
-    return FoodState(munchies);
+
+    Map<String,dynamic> aboutsMap = theMap['abouts'];
+    Map<String,About> abouts = {};
+    aboutsMap.forEach
+    ( (key,value)
+      { abouts[key] = About.fromMap(value); }
+    );
+    return FoodState(munchies,abouts);
   }
   
   
@@ -59,17 +76,24 @@ class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
 {
   FoodCubit() : super( FoodState([ Munch("apple", "2025-01-02 10:43:17" ),
                                    Munch("banana", "2025-01-03 8:41:00" ),
-                                 ]) );
+                                 ],
+                                 { "banana":About("ate",100,"g"),
+                                   "apple":About("ate",200,"g"),
+                                 }
+                                ) 
+                     );
 
-  void setFood(List<Munch> m ) { emit( FoodState(m) ); }
+  void setFood(List<Munch> m ) { emit( FoodState(m,state.abouts) ); }
 
   void addFood( String f, String cat, String dt )
   { Munch m = Munch( f, dt  );
     state.munchies.add(m);
-    emit( FoodState(state.munchies) );
+    if ( state.abouts[f] == null )
+    { state.abouts[f] = About(cat,5,"g"); }
+    emit( FoodState(state.munchies,state.abouts) );
   }
 
-  void reset() { emit( FoodState([]) ); }
+  void reset() { emit( FoodState([],{}) ); }
   
   // fromJson()
   // converts the map form of FoodState into a FoodState object.

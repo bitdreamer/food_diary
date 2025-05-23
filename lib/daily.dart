@@ -7,6 +7,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 
 import "food_state.dart";
 import "munch.dart";
+import "about.dart";
 
 // the Daily layer sets up the Bloc stuff with the FoodCubit
 // from the top.  
@@ -38,6 +39,7 @@ class Daily2 extends StatelessWidget
   { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
     FoodState fs = fc.state;
     TextEditingController tec = TextEditingController();
+    String cat = "ate";
 
     // print("json=${fs.toJson()}"); // debugging
 
@@ -47,7 +49,7 @@ class Daily2 extends StatelessWidget
       ( children: 
         [ dayLog(context), // today so far
           EntryRow(),
-          // ResetButton(),
+          ItemChoices(cat),
         ],
       ),
     );
@@ -66,6 +68,24 @@ class Daily2 extends StatelessWidget
       decoration: BoxDecoration( border:Border.all(width:1)),
       child: Wrap ( children: kids, ),
     );
+  }
+}
+
+class ItemChoices extends StatelessWidget
+{
+  String cat;
+  ItemChoices(this.cat);
+
+  Widget build( BuildContext context )
+  { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
+    FoodState fs = fc.state;
+    Map<String,About> abouts = fs.abouts;
+
+    List<Widget> kids = [];
+    for ( MapEntry<String,About> me in abouts.entries )
+    { kids.add( Text(me.key) ); }
+
+    return Wrap( children: kids );
   }
 }
 
