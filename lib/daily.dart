@@ -1,6 +1,11 @@
 // daily.dart
 // Barrett Koster 2025
 
+// The tree with Daily at the top shows what you have
+// eaten today (or chosen day) and lets you add foods
+// with one touch (each).  
+// We can also pick a few other categories from a menu
+// (besides 'ate'), and set a different time.
 
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -11,7 +16,7 @@ import "munch.dart";
 import "about.dart";
 
 // the Daily layer sets up the Bloc stuff with the FoodCubit
-// alreayd open from the top of the program.  
+// already open from the top of the program.  
 class Daily extends StatelessWidget
 {
   final BuildContext bc;
@@ -22,9 +27,12 @@ class Daily extends StatelessWidget
     return BlocProvider<FoodCubit>.value
     ( value: fc,
       child: BlocBuilder<FoodCubit,FoodState>
-      ( builder: (context,state) => Daily2(),
-// to do: add a layer with HOW to display ... date, sort criteria
-// state for this is NOT hydrated
+      ( builder: (context,state) => 
+        BlocProvider<ShowCubit>
+        ( create: (context) => ShowCubit(),
+          child: BlocBuilder<ShowCubit,ShowState>
+          ( builder: (context, state) =>Daily2(), ),
+        ),
       ),
     );
   }
@@ -59,6 +67,8 @@ class Daily2 extends StatelessWidget
   Widget dayLog( BuildContext context )
   { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
     FoodState fs = fc.state;
+    ShowCubit sc = BlocProvider.of<ShowCubit>(context);
+    ShowState ss = sc.state;
     List<Munch> theList = fs.munchies;
 
     List<Widget> kids = [];
@@ -114,7 +124,8 @@ class EntryRow extends StatelessWidget
 
     return Row
     ( children:
-      [ Text("ate"), // to do: menu of ate, did, felt, hap 'cat'egory
+      [ // Text("ate"), // to do: menu of ate, did, exp(ienced)
+        CatMenu(),
         SizedBox
         ( height:40, width:200,
           child: TextField(controller: tec ),
@@ -128,4 +139,43 @@ class EntryRow extends StatelessWidget
     );
   }
 }
+
+class CatMenu extends StatelessWidget
+{
+  Widget build( BuildContext context )
+  { ShowCubit sc = BlocProvider.of<ShowCubit>(context);
+    ShowState ss = sc.state;
+    String cat = ss.cat;
+
+    return DropdownButton<String>
+    ( value: cat, 
+      items:
+      [ DropdownMenuItem(value:"ate",child:Text("ate")),
+        DropdownMenuItem(value:"did",child:Text("did")),
+        DropdownMenuItem(value:"exp",child:Text("exp")),
+      ],
+      onChanged: (t) { sc.setCat( t! ); }
+    );
+  }
+}
+
+/*  Wing's calc code has a menu thingy ... work from this       
+
+SizedBox(height: 20),
+            DropdownButton<ConversionType>(
+              value: selectedType,
+              items: ConversionType.values.map((type) {
+                return DropdownMenuItem(
+                  value: type,
+                  child: Text(type.toString().split('.').last.replaceAll('To', ' to ')),
+                );
+              }).toList(), 
+              onChanged: (newType) {
+                setState(() {
+                  selectedType = newType!;
+                });
+              }
+            ),
+*/
+
 

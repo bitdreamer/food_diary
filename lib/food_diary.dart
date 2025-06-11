@@ -43,9 +43,7 @@ class FoodDiary extends StatelessWidget
       ( create: (context) => FoodCubit(),
         child: BlocBuilder<FoodCubit,FoodState>
         ( builder: (context,state)
-          { // FDCubit fdc =  BlocProvider.of<FDCubit>(context);
-            // return  Core(title: header, /* fdc:fdc */ );
-            return Splash( header );
+          { return Splash( header );
           },
         ),
       ),

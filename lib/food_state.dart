@@ -117,7 +117,7 @@ class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
       { "banana":About("ate",100,"g"),
         "apple" :About("ate",200,"g"),
         "peach" :About("ate",150,"g"),
-        "apple" :About("ate",200,"g"),
+        "grapes" :About("ate",200,"g"),
         "potato" :About("ate",300,"g"),
         "orange" :About("ate",150,"g"),
         "egg"   :About("ate",100,"g"),
