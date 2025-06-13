@@ -10,10 +10,11 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-import "food_state.dart";
-import "show_state.dart";
-import "munch.dart";
-import "about.dart";
+import "../data/food_state.dart";
+import "../data/show_state.dart";
+import "../data/munch.dart";
+import "../data/about.dart";
+import "about_edit.dart";
 
 // the Daily layer sets up the Bloc stuff with the FoodCubit
 // already open from the top of the program.  
@@ -64,6 +65,8 @@ class Daily2 extends StatelessWidget
     );
   }  
 
+  // returns a widget (container) that has all of the foods
+  // you ate or stuff you felt etc..  
   Widget dayLog( BuildContext context )
   { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
     FoodState fs = fc.state;
@@ -73,15 +76,33 @@ class Daily2 extends StatelessWidget
 
     List<Widget> kids = [];
     for ( Munch m in theList )
-    { kids.add( Text( m.show()) ); }
+    // { kids.add( Text( m.show()) ); }
+    { kids.add( aboutEditButton(context,m)); }
+// to do: instead of just text, this should be a button that 
+// goes to an edit page for this item.
     return Container
     ( height:300, width:400,
       decoration: BoxDecoration( border:Border.all(width:1)),
       child: Wrap ( children: kids, ),
     );
   }
+
+  // each 'about' item is a button that goes to an edit page
+  // for that item.
+  Widget aboutEditButton( BuildContext context, Munch m)
+  {
+    return ElevatedButton
+    ( onPressed: ()
+      { Navigator.of(context).push
+        ( MaterialPageRoute( builder: (_)=>AboutEdit(context, m) )
+        );
+      },
+      child: Text(m.show()),
+    );
+  }
 }
 
+// for the given category, this 
 class ItemChoices extends StatelessWidget
 {
   String cat;
@@ -99,6 +120,9 @@ class ItemChoices extends StatelessWidget
         ( //Text(me.key) 
           ElevatedButton
           ( onPressed: (){ fc.addFood(me.key,cat,DateTime.now().toString()); },
+// to do: the 'now' should be replaced with a reference to the time on the
+// time button.  It defaults to 'now', but you should be able to set it to 
+// earlier in the day or yesterday or whatever.
             child: Text(me.key),
           )
         );

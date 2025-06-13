@@ -12,9 +12,11 @@ class FoodState
 { 
   List<Munch> munchies; // time stamped eating or feeling or ...
   // All time-stamped things are in the same list, and we filter
-  // by cat and date.
+  // by cat and date to show "what you ate on a certain day" for example.
 
   Map<String,About> abouts; // details about each food or feeling ...
+  // This is the list that you choose from, foods, feelings, etc..
+  // We start off with some stuff, but you can add to it.
 
   FoodState(this.munchies, this.abouts);
 

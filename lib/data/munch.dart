@@ -10,9 +10,9 @@
 class Munch 
 {
   String what; // name of the food or feeling or action
-  String when; // date+time stored as string to not hang on format,
-               // for now
-  // int when;
+  String when; // date+time stored as string to not ge hung up on format,
+               // Just for now?
+  // double much;
   // DateTime when;
 
   Munch( this.what, this.when );

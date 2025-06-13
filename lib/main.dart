@@ -9,9 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'food_state.dart';
+import 'data/food_state.dart';
 // import 'munch.dart';
-import 'daily.dart';
+import 'pages/daily.dart';
 
 
 void main() async
