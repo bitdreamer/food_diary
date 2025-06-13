@@ -8,7 +8,7 @@ import "../data/munch.dart";
 import "../data/food_state.dart";
 
 /*
-
+  This page should be able to edit the 
 */
 
 class AboutEdit extends StatelessWidget

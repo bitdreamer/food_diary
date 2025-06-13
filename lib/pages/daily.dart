@@ -76,10 +76,7 @@ class Daily2 extends StatelessWidget
 
     List<Widget> kids = [];
     for ( Munch m in theList )
-    // { kids.add( Text( m.show()) ); }
     { kids.add( aboutEditButton(context,m)); }
-// to do: instead of just text, this should be a button that 
-// goes to an edit page for this item.
     return Container
     ( height:300, width:400,
       decoration: BoxDecoration( border:Border.all(width:1)),
@@ -90,8 +87,7 @@ class Daily2 extends StatelessWidget
   // each 'about' item is a button that goes to an edit page
   // for that item.
   Widget aboutEditButton( BuildContext context, Munch m)
-  {
-    return ElevatedButton
+  { return ElevatedButton
     ( onPressed: ()
       { Navigator.of(context).push
         ( MaterialPageRoute( builder: (_)=>AboutEdit(context, m) )
@@ -119,7 +115,9 @@ class ItemChoices extends StatelessWidget
       {  kids.add
         ( //Text(me.key) 
           ElevatedButton
-          ( onPressed: (){ fc.addFood(me.key,cat,DateTime.now().toString()); },
+          ( onPressed: ()
+            // { fc.addFood(me.key,cat,DateTime.now().toString()); },
+            { fc.addMunch(me.key,me.value,DateTime.now().toString()); },
 // to do: the 'now' should be replaced with a reference to the time on the
 // time button.  It defaults to 'now', but you should be able to set it to 
 // earlier in the day or yesterday or whatever.

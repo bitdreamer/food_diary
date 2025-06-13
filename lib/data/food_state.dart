@@ -79,11 +79,21 @@ class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
   void setFood(List<Munch> m ) { emit( FoodState(m,state.abouts) ); }
 
   void addFood( String f, String cat, String dt )
-  { Munch m = Munch( f, dt  );
+  { Munch m = Munch( f, dt, 5  );
     state.munchies.add(m);
     if ( state.abouts[f] == null )
     { state.abouts[f] = About(cat,5,"g"); }
     emit( FoodState(state.munchies,state.abouts) );
+  }
+
+  // add a Munch to the FoodState that has this name+about+datetime
+  void addMunch( String name, About a, String dt )
+  { Munch m = Munch( name, dt, a.much );
+    state.munchies.add(m);
+    if ( state.abouts[name] == null )
+    { state.abouts[name] = About(a.cat,50,"g"); }
+    emit( FoodState(state.munchies,state.abouts) );
+
   }
 
   void reset() { emit( initFS() ); }

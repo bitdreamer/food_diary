@@ -12,10 +12,10 @@ class Munch
   String what; // name of the food or feeling or action
   String when; // date+time stored as string to not ge hung up on format,
                // Just for now?
-  // double much;
+  double much;
   // DateTime when;
 
-  Munch( this.what, this.when );
+  Munch( this.what, this.when, this.much );
   // Munch( this.what, String whenString )
   // : when = DateTime.parse(whenString);
 
@@ -31,6 +31,7 @@ class Munch
     Map<String,dynamic> theMap = {};
     theMap['what'] = what;
     theMap['when'] = when;
+    theMap['much'] = much;
     return theMap;
   }
 
@@ -39,7 +40,8 @@ class Munch
   { // print("Munch.fromMap called on ${theMap['what']}");
     String what = theMap['what'];
     String when = theMap['when'];
-    return Munch(what,when);
+    double much = theMap['much'];
+    return Munch(what,when,much);
   }
   
 /* These do not seem to be needed.
