@@ -1,6 +1,8 @@
 
 
 // About holds details about a food, action, feeling, or happening.
+// Note: this is not the event of eating one apple.  This is the
+// information that apples weight 300 grams and is something you 'ate'.
 // We do not actually store the name of the thing, because this is
 // used in a map (where that name gets you here).
 class About

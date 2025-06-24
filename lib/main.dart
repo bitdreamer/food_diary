@@ -2,7 +2,7 @@
 // Barrett Koster
 // 
 
-import "dart:io";
+// import "dart:io";
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,17 +19,21 @@ void main() async
   runApp(const FoodDiary());
 }
 
+// the stuff that make Hydrate work.
 Future<void> hydratePrep() async
 { WidgetsFlutterBinding.ensureInitialized();
-  Directory addx = await getApplicationDocumentsDirectory();
-  String add = addx.path;
   HydratedBloc.storage = await HydratedStorage.build
   (  storageDirectory: HydratedStorageDirectory
     ( (await getApplicationDocumentsDirectory()).path,),
   );
-  print("add=$add");
+  // debugging ...
+  // Directory addx = await getApplicationDocumentsDirectory();
+  // String add = addx.path; 
+  // print("add=$add");
 }
 
+// This layer establishes the HydreatedCubit that holds
+// all of the data.
 class FoodDiary extends StatelessWidget
 { static const String header = "Food Diary";
 
@@ -65,9 +69,9 @@ class Splash extends StatelessWidget
       ( child: Column
         ( children:
           [ Text("by Barrett Koster 2025"),
-            foodsButton(context),
-            analysisButton(context),
-            ResetButton(),
+            foodsButton(context), // enter data
+            analysisButton(context), // analyze it
+            ResetButton(), // for debugging
           ],
         ),
       ),
@@ -76,6 +80,7 @@ class Splash extends StatelessWidget
 
   // foodsButton() is a button that sends you to
   // the page with the list of foods for today.
+  // Lets you enter more foods or feelings or ... 
   Widget foodsButton( BuildContext context )
   { return ElevatedButton
     ( onPressed: ()
@@ -88,6 +93,8 @@ class Splash extends StatelessWidget
       child: Text("zappnin"),
     );
   }
+
+  // returns a button that sends you to the analysis page
   Widget analysisButton( BuildContext context )
   { return ElevatedButton
     ( onPressed: (){},
@@ -96,6 +103,8 @@ class Splash extends StatelessWidget
   }
 }
 
+// erases all of the data.  
+// Remove this or make it hard to get to in the final project.
 class ResetButton extends StatelessWidget
 { Widget build( BuildContext context )
   { FoodCubit fc = BlocProvider.of<FoodCubit>(context);

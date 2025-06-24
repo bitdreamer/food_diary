@@ -148,7 +148,7 @@ class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
 
         "glucose" :About("exp",110,"dk"),
         "headache" :About("exp",4,"0-10"),
-        "temp" : About("exp",37,"C"),
+        "body temp." : About("exp",37,"C"),
         "fart" :About("exp",1,"1-3"),
         "poop" :About("exp",2,"1-3"),
         "pee" :About("exp",20,"seconds"),

@@ -18,6 +18,8 @@ import "about_edit.dart";
 
 // the Daily layer sets up the Bloc stuff with the FoodCubit
 // already open from the top of the program.  
+// We also start the ShowCubit layer with currently selected
+// settings like date, time and what category we are showing.
 class Daily extends StatelessWidget
 {
   final BuildContext bc;
@@ -41,7 +43,7 @@ class Daily extends StatelessWidget
 
 // This is the data entry page.
 class Daily2 extends StatelessWidget 
-{ final String title = "Daily - ${DateTime.now().toString().split(" ")[0]}";
+{ // final String title = "Daily - ${DateTime.now().toString().split(" ")[0]}";
   Daily2( {super.key} );
 
   @override
@@ -52,9 +54,13 @@ class Daily2 extends StatelessWidget
     String cat = "ate";
 
     // print("json=${fs.toJson()}"); // debugging
+    ShowCubit sc = BlocProvider.of<ShowCubit>(context);
+    ShowState ss = sc.state;
+    String dt = ss.datetime;
+    String date = dt.split(" ")[0];
 
     return Scaffold
-    ( appBar: AppBar(  title: Text(title),),
+    ( appBar: AppBar(  title: Text("Daily = $date"),),
       body: Column
       ( children: 
         [ dayLog(context), // today so far
@@ -72,11 +78,16 @@ class Daily2 extends StatelessWidget
     FoodState fs = fc.state;
     ShowCubit sc = BlocProvider.of<ShowCubit>(context);
     ShowState ss = sc.state;
+    String dt = ss.datetime;
+    String date = dt.split(" ")[0];
     List<Munch> theList = fs.munchies;
 
     List<Widget> kids = [];
     for ( Munch m in theList )
-    { kids.add( aboutEditButton(context,m)); }
+    { if ( m.when.split(" ")[0] == date )
+      { kids.add( aboutEditButton(context,m));
+      }
+    }
     return Container
     ( height:300, width:400,
       decoration: BoxDecoration( border:Border.all(width:1)),
@@ -98,7 +109,9 @@ class Daily2 extends StatelessWidget
   }
 }
 
-// for the given category, this 
+// for the given category, this returns a Wrap object
+// listing as buttons all of the items in the 'abouts' list 
+// of that category.  
 class ItemChoices extends StatelessWidget
 {
   String cat;
@@ -113,8 +126,7 @@ class ItemChoices extends StatelessWidget
     for ( MapEntry<String,About> me in abouts.entries )
     { if ( me.value.cat==cat)
       {  kids.add
-        ( //Text(me.key) 
-          ElevatedButton
+        ( ElevatedButton
           ( onPressed: ()
             // { fc.addFood(me.key,cat,DateTime.now().toString()); },
             { fc.addMunch(me.key,me.value,DateTime.now().toString()); },
