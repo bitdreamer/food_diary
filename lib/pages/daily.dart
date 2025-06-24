@@ -2,10 +2,10 @@
 // Barrett Koster 2025
 
 // The tree with Daily at the top shows what you have
-// eaten today (or chosen day) and lets you add foods
-// with one touch (each).  
-// We can also pick a few other categories from a menu
-// (besides 'ate'), and set a different time.
+// eaten (or done) today (or on a chosen day) and lets you add foods
+// (or events) with one touch (each).  
+// We can also pick the category (food, action, event) from a menu
+// and set a different date amd time.
 
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -54,6 +54,7 @@ class Daily2 extends StatelessWidget
     String cat = "ate";
 
     // print("json=${fs.toJson()}"); // debugging
+    // get the date out of ShowState
     ShowCubit sc = BlocProvider.of<ShowCubit>(context);
     ShowState ss = sc.state;
     String dt = ss.datetime;
@@ -65,7 +66,7 @@ class Daily2 extends StatelessWidget
       ( children: 
         [ dayLog(context), // today so far
           EntryRow(),
-          ItemChoices(cat),
+          ItemChoices(),
         ],
       ),
     );
@@ -85,62 +86,16 @@ class Daily2 extends StatelessWidget
     List<Widget> kids = [];
     for ( Munch m in theList )
     { if ( m.when.split(" ")[0] == date )
-      { kids.add( aboutEditButton(context,m));
+      { String thisCat="no cat";
+        About? aboutM = fs.abouts[m.what];
+        if ( aboutM != null ) { thisCat = aboutM.cat; }
+        if ( thisCat == ss.cat )
+        { kids.add( aboutEditButton(context,m)); }
       }
     }
-    return Container
-    ( height:300, width:400,
-      decoration: BoxDecoration( border:Border.all(width:1)),
-      child: Wrap ( children: kids, ),
-    );
+    return   Wrap ( children: kids, ) ;
   }
 
-  // each 'about' item is a button that goes to an edit page
-  // for that item.
-  Widget aboutEditButton( BuildContext context, Munch m)
-  { return ElevatedButton
-    ( onPressed: ()
-      { Navigator.of(context).push
-        ( MaterialPageRoute( builder: (_)=>AboutEdit(context, m) )
-        );
-      },
-      child: Text(m.show()),
-    );
-  }
-}
-
-// for the given category, this returns a Wrap object
-// listing as buttons all of the items in the 'abouts' list 
-// of that category.  
-class ItemChoices extends StatelessWidget
-{
-  String cat;
-  ItemChoices(this.cat);
-
-  Widget build( BuildContext context )
-  { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
-    FoodState fs = fc.state;
-    Map<String,About> abouts = fs.abouts;
-
-    List<Widget> kids = [];
-    for ( MapEntry<String,About> me in abouts.entries )
-    { if ( me.value.cat==cat)
-      {  kids.add
-        ( ElevatedButton
-          ( onPressed: ()
-            // { fc.addFood(me.key,cat,DateTime.now().toString()); },
-            { fc.addMunch(me.key,me.value,DateTime.now().toString()); },
-// to do: the 'now' should be replaced with a reference to the time on the
-// time button.  It defaults to 'now', but you should be able to set it to 
-// earlier in the day or yesterday or whatever.
-            child: Text(me.key),
-          )
-        );
-      }
-    }
-
-    return Wrap( children: kids );
-  }
 }
 
 class EntryRow extends StatelessWidget
@@ -153,26 +108,102 @@ class EntryRow extends StatelessWidget
   { 
     FoodCubit fc = BlocProvider.of<FoodCubit>(context);
     // FoodState fs = fc.state;
-    String cat = "ate"; // ate, did,felt,hap  
-    String dt = DateTime.now().toString();
+    ShowCubit sc = BlocProvider.of<ShowCubit>(context);
+    ShowState ss = sc.state;
+    String cat = ss.cat; // "ate"; // ate, did,exp  
+    String dt = ss.datetime; // DateTime.now().toString();
 
-    return Row
-    ( children:
-      [ // Text("ate"), // to do: menu of ate, did, exp(ienced)
-        CatMenu(),
-        SizedBox
-        ( height:40, width:200,
-          child: TextField(controller: tec ),
-        ),
-        Text("now"), // to do: make a menu of previous hours
-        ElevatedButton
-        ( onPressed: (){ fc.addFood(tec.text,cat,dt); }, // to do: add cat, date
-          child: Text("add"),
-        ),
-      ],
+    return Container
+    ( decoration: BoxDecoration
+      ( border: Border.all(width:1),color: Colors.yellow,
+      ),
+      child: Row
+      ( children:
+        [ CatMenu(),
+          SizedBox
+          ( height:40, width:200,
+            child: TextField(controller: tec ),
+          ),
+          // Text("now"), // to do: make a menu of previous hours
+          hoursMenu(context),
+          ElevatedButton
+          ( onPressed: (){ fc.addFood(tec.text,cat,dt); }, // to do: add cat, date
+            child: Text("add"),
+          ),
+        ],
+      )
+    );
+  }
+  
+  Widget hoursMenu( BuildContext context )
+  { ShowCubit sc = BlocProvider.of<ShowCubit>(context);
+    ShowState ss = sc.state;
+    String hour = ss.getHour();
+    List<DropdownMenuItem<String>> hours = [];
+    for ( int i=0; i<24; i++ )
+    { String ii = "$i";
+      hours.add(DropdownMenuItem(value:ii,child:Text(ii)));
+    }
+
+    return DropdownButton<String>
+    ( value: hour,
+      items: hours,
+      onChanged: (h) { sc.setHour(h!); }
     );
   }
 }
+  // each 'about' item is a button that goes to an edit page
+  // for that item.
+  Widget aboutEditButton( BuildContext context, Munch m)
+  { return ElevatedButton
+    ( onPressed: ()
+      { Navigator.of(context).push
+        ( MaterialPageRoute( builder: (_)=>AboutEdit(context, m) )
+        );
+      },
+      child: Text(m.show()),
+    );
+  }
+
+
+// This returns a Wrap object
+// listing as buttons all of the items in the 'abouts' list 
+// of the current category.  
+class ItemChoices extends StatelessWidget
+{
+  //String cat;
+  //ItemChoices(this.cat);
+
+  Widget build( BuildContext context )
+  { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
+    FoodState fs = fc.state;
+    Map<String,About> abouts = fs.abouts;
+
+        ShowCubit sc = BlocProvider.of<ShowCubit>(context);
+    ShowState ss = sc.state;
+    String cat = ss.cat; // "ate"; // ate, did,exp  
+    String dt = ss.datetime; // DateTime.now().toString();
+
+  
+    List<Widget> kids = [];
+    for ( MapEntry<String,About> me in abouts.entries )
+    { if ( me.value.cat==cat)
+      {  kids.add
+        ( ElevatedButton
+          ( onPressed: ()
+            // { fc.addFood(me.key,cat,DateTime.now().toString()); },
+            { fc.addMunch(me.key,me.value,dt); },
+            child: Text(me.key),
+          )
+        );
+      }
+    }
+
+    return Wrap( children: kids );
+  }
+}
+
+
 
 class CatMenu extends StatelessWidget
 {

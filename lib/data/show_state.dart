@@ -5,7 +5,13 @@ class ShowState
 {
   String cat;
   String datetime; //  the full format
-  ShowState( this.cat, this.datetime );
+  ShowState( this.cat, this.datetime )
+  { // debug
+    print(" ++++++++ ss.datetime: $datetime ");
+  }
+
+  String getDate(){ return datetime.split(" ")[0]; }
+  String getHour(){ return datetime.split(" ")[1].split(":")[0]; }
 }
 
 class ShowCubit extends Cubit<ShowState>
@@ -18,5 +24,16 @@ class ShowCubit extends Cubit<ShowState>
          );
 
   void setCat( String c ) { emit( ShowState(c,state.datetime) );  }
-  void setDate( String d ) { emit( ShowState(state.cat, d) ); }
+  void setDatetime( String dt ) { emit( ShowState(state.cat, dt) ); }
+
+  void setHour(String h)
+  {
+    List<String> parts = state.datetime.split(" ");
+    String date = parts[0];
+    String time = parts[1];
+    List<String> tparts = time.split(":");
+    String hour = tparts[0];
+    String newDT = "$date $h:30:00";
+    setDatetime(newDT);
+  }
 }

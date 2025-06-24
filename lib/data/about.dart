@@ -8,7 +8,7 @@
 class About
 {
   // String what;
-  String cat; // 'ate','did','felt','hap'
+  String cat; // 'ate','did','exp'
   double much; // default quantity for this thing
   String units; // Kg, ml, count, 0-10 .... 
 
