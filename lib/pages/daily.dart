@@ -61,7 +61,15 @@ class Daily2 extends StatelessWidget
     String date = dt.split(" ")[0];
 
     return Scaffold
-    ( appBar: AppBar(  title: Text("Daily = $date"),),
+    ( appBar: AppBar
+      ( title: Row
+        ( children:
+          [ bumpDate(context,-1,"←"),
+            Text("Daily = $date"),
+            bumpDate(context, 1,"→"),
+          ]
+        ),
+      ),
       body: Column
       ( children: 
         [ dayLog(context), // today so far
@@ -71,6 +79,14 @@ class Daily2 extends StatelessWidget
       ),
     );
   }  
+
+  Widget bumpDate( BuildContext context, int much, String symb )
+  {
+    return ElevatedButton
+    ( onPressed: (){ BlocProvider.of<ShowCubit>(context).bumpDate(much); },
+      child: Text(symb)
+    );
+  }
 
   // returns a widget (container) that has all of the foods
   // you ate or stuff you felt etc..  
@@ -95,7 +111,6 @@ class Daily2 extends StatelessWidget
     }
     return   Wrap ( children: kids, ) ;
   }
-
 }
 
 class EntryRow extends StatelessWidget

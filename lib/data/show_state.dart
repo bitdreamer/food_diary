@@ -5,10 +5,8 @@ class ShowState
 {
   String cat;
   String datetime; //  the full format
-  ShowState( this.cat, this.datetime )
-  { // debug
-    print(" ++++++++ ss.datetime: $datetime ");
-  }
+  ShowState( this.cat, this.datetime );
+  // {  print(" ++++++++ ss.datetime: $datetime "); } // debug
 
   String getDate(){ return datetime.split(" ")[0]; }
   String getHour(){ return datetime.split(" ")[1].split(":")[0]; }
@@ -35,5 +33,13 @@ class ShowCubit extends Cubit<ShowState>
     String hour = tparts[0];
     String newDT = "$date $h:30:00";
     setDatetime(newDT);
+  }
+
+  // change the date this many days
+  void bumpDate( int much )
+  { DateTime current = DateTime.parse(state.datetime);
+    if (much<0) { current = current.subtract( Duration(days:-much) ); }
+    else        { current = current.add     ( Duration(days: much) ); }
+    setDatetime( current.toString() );
   }
 }
