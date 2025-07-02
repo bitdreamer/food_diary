@@ -5,7 +5,8 @@ class ShowState
 {
   String cat;
   String datetime; //  the full format
-  ShowState( this.cat, this.datetime );
+  bool keeb;
+  ShowState( this.cat, this.datetime, this.keeb );
   // {  print(" ++++++++ ss.datetime: $datetime "); } // debug
 
   String getDate(){ return datetime.split(" ")[0]; }
@@ -17,12 +18,13 @@ class ShowCubit extends Cubit<ShowState>
   // start off with stuff you ate today
   ShowCubit() 
   : super( ShowState( "ate",
-                      DateTime.now().toString() //.split(" ")[0]
+                      DateTime.now().toString(),
+                      false
                     ) 
          );
 
-  void setCat( String c ) { emit( ShowState(c,state.datetime) );  }
-  void setDatetime( String dt ) { emit( ShowState(state.cat, dt) ); }
+  void setCat( String c ) { emit( ShowState(c,state.datetime, false) );  }
+  void setDatetime( String dt ) { emit( ShowState(state.cat, dt, state.keeb) ); }
 
   void setHour(String h)
   {
@@ -42,4 +44,7 @@ class ShowCubit extends Cubit<ShowState>
     else        { current = current.add     ( Duration(days: much) ); }
     setDatetime( current.toString() );
   }
+
+  void setKeyboard( bool tf )
+  { emit( ShowState(state.cat, state.datetime, tf) ); }
 }

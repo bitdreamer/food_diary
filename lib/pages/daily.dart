@@ -15,6 +15,7 @@ import "../data/show_state.dart";
 import "../data/munch.dart";
 import "../data/about.dart";
 import "about_edit.dart";
+import "../widgets/keyboard.dart";
 
 // the Daily layer sets up the Bloc stuff with the FoodCubit
 // already open from the top of the program.  
@@ -51,7 +52,7 @@ class Daily2 extends StatelessWidget
   { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
     FoodState fs = fc.state;
     TextEditingController tec = TextEditingController();
-    String cat = "ate";
+    // String cat = "ate";
 
     // print("json=${fs.toJson()}"); // debugging
     // get the date out of ShowState
@@ -73,7 +74,8 @@ class Daily2 extends StatelessWidget
       body: Column
       ( children: 
         [ dayLog(context), // today so far
-          EntryRow(),
+          EntryRow( tec ),
+          ss.keeb? KeyBoarg( tec ): Row(children:[]),
           ItemChoices(),
         ],
       ),
@@ -113,11 +115,14 @@ class Daily2 extends StatelessWidget
   }
 }
 
+// This lives in the middle of the screen.  It houses
+// the category menu and a place to type new foods/feels ... .
 class EntryRow extends StatelessWidget
 { 
   final TextEditingController tec;
 
-  EntryRow( ) : tec = TextEditingController();
+  // EntryRow( ) : tec = TextEditingController();
+  EntryRow( this.tec );
 
   Widget build( BuildContext context )
   { 
@@ -127,6 +132,7 @@ class EntryRow extends StatelessWidget
     ShowState ss = sc.state;
     String cat = ss.cat; // "ate"; // ate, did,exp  
     String dt = ss.datetime; // DateTime.now().toString();
+    bool keeb = ss.keeb;
 
     return Container
     ( decoration: BoxDecoration
@@ -135,14 +141,20 @@ class EntryRow extends StatelessWidget
       child: Row
       ( children:
         [ CatMenu(),
-          SizedBox
-          ( height:40, width:200,
-            child: TextField(controller: tec ),
-          ),
-          // Text("now"), // to do: make a menu of previous hours
+          keeb
+          ? SizedBox
+            ( height:40, width:200,
+              child: TextField(controller: tec ),
+            )
+          : ElevatedButton
+            ( onPressed: (){ sc.setKeyboard(true); },
+              child: Text("keyboard"),
+            ),
+        
           hoursMenu(context),
           ElevatedButton
-          ( onPressed: (){ fc.addFood(tec.text,cat,dt); }, // to do: add cat, date
+          ( onPressed: ()
+            { fc.addFood(tec.text,cat,dt); sc.setKeyboard(false); },
             child: Text("add"),
           ),
         ],
@@ -234,7 +246,7 @@ class CatMenu extends StatelessWidget
         DropdownMenuItem(value:"did",child:Text("did")),
         DropdownMenuItem(value:"exp",child:Text("exp")),
       ],
-      onChanged: (t) { sc.setCat( t! ); }
+      onChanged: (t) { sc.setCat( t! );  }
     );
   }
 }
