@@ -11,7 +11,6 @@ class Munch
 {
   String what; // name of the food or feeling or action
   String when; // date+time stored as string in DateTime.toString() format,
-               // Just for now?
   double much;
   // DateTime when;
 

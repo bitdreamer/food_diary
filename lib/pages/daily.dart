@@ -14,7 +14,7 @@ import "../data/food_state.dart";
 import "../data/show_state.dart";
 import "../data/munch.dart";
 import "../data/about.dart";
-import "about_edit.dart";
+import "munch_edit.dart";
 import "../widgets/keyboard.dart";
 
 // the Daily layer sets up the Bloc stuff with the FoodCubit
@@ -52,9 +52,9 @@ class Daily2 extends StatelessWidget
   { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
     FoodState fs = fc.state;
     TextEditingController tec = TextEditingController();
-    // String cat = "ate";
 
     // print("json=${fs.toJson()}"); // debugging
+
     // get the date out of ShowState
     ShowCubit sc = BlocProvider.of<ShowCubit>(context);
     ShowState ss = sc.state;
@@ -62,7 +62,7 @@ class Daily2 extends StatelessWidget
     String date = dt.split(" ")[0];
 
     return Scaffold
-    ( appBar: AppBar
+    ( appBar: AppBar // shows the date, can adjust
       ( title: Row
         ( children:
           [ bumpDate(context,-1,"←"),
@@ -108,7 +108,7 @@ class Daily2 extends StatelessWidget
         About? aboutM = fs.abouts[m.what];
         if ( aboutM != null ) { thisCat = aboutM.cat; }
         if ( thisCat == ss.cat )
-        { kids.add( aboutEditButton(context,m)); }
+        { kids.add( munchEditButton(context,m)); }
       }
     }
     return   Wrap ( children: kids, ) ;
@@ -179,13 +179,15 @@ class EntryRow extends StatelessWidget
     );
   }
 }
-  // each 'about' item is a button that goes to an edit page
+  // each item is a button that goes to an edit page
   // for that item.
-  Widget aboutEditButton( BuildContext context, Munch m)
-  { return ElevatedButton
+  Widget munchEditButton( BuildContext context, Munch m)
+  { ShowCubit sc = BlocProvider.of<ShowCubit>(context);
+    ShowState ss = sc.state;
+    return ElevatedButton
     ( onPressed: ()
       { Navigator.of(context).push
-        ( MaterialPageRoute( builder: (_)=>AboutEdit(context, m) )
+        ( MaterialPageRoute( builder: (_)=>MunchEdit(context, m, ss.cat) )
         );
       },
       child: Text(m.show()),

@@ -32,7 +32,7 @@ Future<void> hydratePrep() async
   // print("add=$add");
 }
 
-// This layer establishes the HydreatedCubit that holds
+// This layer establishes the HydratedCubit that holds
 // all of the data.
 class FoodDiary extends StatelessWidget
 { static const String header = "Food Diary";
