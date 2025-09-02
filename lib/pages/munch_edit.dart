@@ -6,6 +6,8 @@ import "package:flutter_bloc/flutter_bloc.dart";
 
 import "../data/munch.dart";
 import "../data/food_state.dart";
+import "../data/show_state.dart";
+import "../widgets/hours_menu.dart";
 
 /*
   This page should be able to edit the time of a munch or delete it.
@@ -27,11 +29,13 @@ class MunchEdit extends StatelessWidget
     return BlocProvider<FoodCubit>.value
     ( value: fc,
       child: BlocBuilder<FoodCubit,FoodState>
-      ( builder: (context,state) => Scaffold
-        ( appBar: AppBar( title: Text("edit item") ),
-          body: MunchEdit2(m, cat), // Text("edit page for ${m.show()}"),
+      ( builder: (context,state) => BlocProvider<ShowCubit>
+        ( create: (context) => ShowCubit(),
+          child: BlocBuilder<ShowCubit,ShowState>
+          ( builder: (context, state) => MunchEdit2(m, cat),
+          ),
         ),
-      )
+      ),
     );
   }
 }
@@ -51,19 +55,28 @@ class MunchEdit2 extends StatelessWidget
     TextEditingController tec = TextEditingController();
 
     // return Text("hi there");
-    return Column
-    ( children:
-      [ Text("edit page for ${m.show()}"),
-        Row
-        ( children:
-          [ Text("what"),
-            SizedBox
-            ( height:40, width: 200,
-              child: TextField(controller:tec),
-            ),
-          ],
-        ),
-      ]
+    return Scaffold
+    ( appBar: AppBar( title: Text("edit ${m.show()}") ),
+      body:Column
+      ( children:
+        [ Text("edit page for ${m.show()}"),
+          Row
+          ( children:
+            [ Text("what"),
+              SizedBox
+              ( height:40, width: 200,
+                child: TextField(controller:tec),
+              ),
+            ],
+          ),
+          Row
+          ( children:
+            [ Text("hour of the day  "),
+              HoursMenu(),
+            ],
+          ),
+        ]
+      ),
     );
 
     // fields to edit
