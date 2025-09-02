@@ -23,6 +23,10 @@ class ShowCubit extends Cubit<ShowState>
                     ) 
          );
 
+  // constructor with state given (but not keyboard)
+  ShowCubit.set( String c, String dt )
+  : super( ShowState( c, dt, false ) );
+
   void setCat( String c ) { emit( ShowState(c,state.datetime, false) );  }
   void setDatetime( String dt ) { emit( ShowState(state.cat, dt, state.keeb) ); }
 

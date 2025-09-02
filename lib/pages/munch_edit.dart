@@ -30,7 +30,7 @@ class MunchEdit extends StatelessWidget
     ( value: fc,
       child: BlocBuilder<FoodCubit,FoodState>
       ( builder: (context,state) => BlocProvider<ShowCubit>
-        ( create: (context) => ShowCubit(),
+        ( create: (context) => ShowCubit.set(cat,m.when),
           child: BlocBuilder<ShowCubit,ShowState>
           ( builder: (context, state) => MunchEdit2(m, cat),
           ),
