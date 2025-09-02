@@ -16,6 +16,7 @@ import "../data/munch.dart";
 import "../data/about.dart";
 import "munch_edit.dart";
 import "../widgets/keyboard.dart";
+import "../widgets/hours_menu.dart";
 
 // the Daily layer sets up the Bloc stuff with the FoodCubit
 // already open from the top of the program.  
@@ -43,6 +44,14 @@ class Daily extends StatelessWidget
 }
 
 // This is the data entry page.
+// date with adjusters
+// area to show what you ate or felt or ...
+// bar in middle with 
+//    selector for category ate/felt/...
+//    button to turn on keyboard for entry of new food/feeling/...
+//    pull down menu for hour of day
+//    'add' button (should probably only show up when keyboard is active
+// area with all known choices for category
 class Daily2 extends StatelessWidget 
 { // final String title = "Daily - ${DateTime.now().toString().split(" ")[0]}";
   Daily2( {super.key} );
@@ -62,7 +71,7 @@ class Daily2 extends StatelessWidget
     String date = dt.split(" ")[0];
 
     return Scaffold
-    ( appBar: AppBar // shows the date, can adjust
+    ( appBar: AppBar // shows the date, can adjust future/past
       ( title: Row
         ( children:
           [ bumpDate(context,-1,"←"),
@@ -73,15 +82,16 @@ class Daily2 extends StatelessWidget
       ),
       body: Column
       ( children: 
-        [ dayLog(context), // today so far
+        [ dayLog(context), // today so far, what you ate or felt or ...
           EntryRow( tec ),
           ss.keeb? KeyBoarg( tec ): Row(children:[]),
-          ItemChoices(),
+          ItemChoices(), // stuff you can say you ate (felt, whatever)
         ],
       ),
     );
   }  
 
+  // is a button that changes the .datetime in ShowState.
   Widget bumpDate( BuildContext context, int much, String symb )
   {
     return ElevatedButton
@@ -116,7 +126,7 @@ class Daily2 extends StatelessWidget
 }
 
 // This lives in the middle of the screen.  It houses
-// the category menu and a place to type new foods/feels ... .
+// the category menu and current hour and a place to type new foods/feels ... .
 class EntryRow extends StatelessWidget
 { 
   final TextEditingController tec;
@@ -141,7 +151,9 @@ class EntryRow extends StatelessWidget
       child: Row
       ( children:
         [ CatMenu(),
-          keeb
+          HoursMenu(), // hoursMenu(context),
+          keeb // if keeb, show text being typed, 
+               // else show button to turn on keyboard
           ? SizedBox
             ( height:40, width:200,
               child: TextField(controller: tec ),
@@ -150,37 +162,22 @@ class EntryRow extends StatelessWidget
             ( onPressed: (){ sc.setKeyboard(true); },
               child: Text("keyboard"),
             ),
-        
-          hoursMenu(context),
-          ElevatedButton
-          ( onPressed: ()
-            { fc.addFood(tec.text,cat,dt); sc.setKeyboard(false); },
-            child: Text("add"),
-          ),
+          keeb // if stuff is being typed, show 'add' button (hit when done typing)
+          ? ElevatedButton
+            ( onPressed: ()
+              { fc.addFood(tec.text,cat,dt); sc.setKeyboard(false); },
+              child: Text("add"),
+            )
+          : Text(""),
         ],
       )
     );
   }
-  
-  Widget hoursMenu( BuildContext context )
-  { ShowCubit sc = BlocProvider.of<ShowCubit>(context);
-    ShowState ss = sc.state;
-    String hour = ss.getHour();
-    List<DropdownMenuItem<String>> hours = [];
-    for ( int i=0; i<24; i++ )
-    { String ii = "$i";
-      hours.add(DropdownMenuItem(value:ii,child:Text(ii)));
-    }
-
-    return DropdownButton<String>
-    ( value: hour,
-      items: hours,
-      onChanged: (h) { sc.setHour(h!); }
-    );
-  }
 }
-  // each item is a button that goes to an edit page
-  // for that item.
+
+  // Each item (showing in what you ate/felt/...)
+  // is a button that goes to an edit page
+  // for that item.  This is that button.
   Widget munchEditButton( BuildContext context, Munch m)
   { ShowCubit sc = BlocProvider.of<ShowCubit>(context);
     ShowState ss = sc.state;
@@ -199,11 +196,7 @@ class EntryRow extends StatelessWidget
 // listing as buttons all of the items in the 'abouts' list 
 // of the current category.  
 class ItemChoices extends StatelessWidget
-{
-  //String cat;
-  //ItemChoices(this.cat);
-
-  Widget build( BuildContext context )
+{ Widget build( BuildContext context )
   { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
     FoodState fs = fc.state;
     Map<String,About> abouts = fs.abouts;

@@ -11,7 +11,7 @@ class Munch
 {
   String what; // name of the food or feeling or action
   String when; // date+time stored as string in DateTime.toString() format,
-  double much;
+  double much; // quantity.  units are in the associated About object
   // DateTime when;
 
   Munch( this.what, this.when, this.much );

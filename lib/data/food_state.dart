@@ -17,6 +17,7 @@ class FoodState
   Map<String,About> abouts; // details about each food or feeling ...
   // This is the list that you choose from, foods, feelings, etc..
   // We start off with some stuff, but you can add to it.
+  // The string map key is the food or feeling name (.what).
 
   FoodState(this.munchies, this.abouts);
 

@@ -1,4 +1,4 @@
-// about_edit.dart
+// munch_edit.dart
 // Barrett Koster  2025
 
 import "package:flutter/material.dart";
@@ -8,14 +8,17 @@ import "../data/munch.dart";
 import "../data/food_state.dart";
 
 /*
-  This page should be able to edit the 
+  This page should be able to edit the time of a munch or delete it.
 */
 
+// the MunchEdit layer is just to establish the FoodState on this page.
+// See MunchEdit2 for visible widget content.
 class MunchEdit extends StatelessWidget
 {
-  final BuildContext bc;
-  final Munch m;
-  final String cat;
+  final BuildContext bc; // context of calling page, use to make BLoC for THIS page.
+  final Munch m; // the item being edited
+  final String cat; // the associated category.  We could look this up in
+                    // the map, but here it is. (??)
   MunchEdit( this.bc, this.m, this.cat );
 
   Widget build( BuildContext context )
@@ -33,7 +36,7 @@ class MunchEdit extends StatelessWidget
   }
 }
 
-//  this page allow editing of the Munch as well as 
+// MunchEdit2 page allow editing of the Munch as well as 
 // implicit editing of the About as well.
 class MunchEdit2 extends StatelessWidget
 {
@@ -45,7 +48,23 @@ class MunchEdit2 extends StatelessWidget
   @override
   Widget build( BuildContext context )
   {
-    return Text("edit page for ${m.show()}");
+    TextEditingController tec = TextEditingController();
+
+    // return Text("hi there");
+    return Column
+    ( children:
+      [ Text("edit page for ${m.show()}"),
+        Row
+        ( children:
+          [ Text("what"),
+            SizedBox
+            ( height:40, width: 200,
+              child: TextField(controller:tec),
+            ),
+          ],
+        ),
+      ]
+    );
 
     // fields to edit
     // what
